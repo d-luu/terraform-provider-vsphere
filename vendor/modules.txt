@@ -6,8 +6,6 @@ cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
 cloud.google.com/go/compute/metadata
-# github.com/Sirupsen/logrus v1.4.2 => github.com/sirupsen/logrus v1.3.0
-github.com/Sirupsen/logrus
 # github.com/agext/levenshtein v1.2.2
 github.com/agext/levenshtein
 # github.com/apparentlymart/go-cidr v1.0.0
@@ -218,6 +216,8 @@ github.com/posener/complete
 github.com/posener/complete/cmd/install
 github.com/posener/complete/cmd
 github.com/posener/complete/match
+# github.com/sirupsen/logrus v1.4.2
+github.com/sirupsen/logrus
 # github.com/spf13/afero v1.2.2
 github.com/spf13/afero
 github.com/spf13/afero/mem
@@ -255,7 +255,7 @@ github.com/vmware/govmomi/list
 github.com/vmware/govmomi/nfc
 github.com/vmware/govmomi/vim25/progress
 github.com/vmware/govmomi/vim25/xml
-# github.com/vmware/vic v1.5.2
+# github.com/vmware/vic v0.0.0-00010101000000-000000000000 => github.com/d-luu/vic v1.5.3-patch
 github.com/vmware/vic/pkg/vsphere/tags
 # github.com/zclconf/go-cty v0.0.0-20190516203816-4fecf87372ec
 github.com/zclconf/go-cty/cty
@@ -286,7 +286,6 @@ go.opencensus.io/resource
 # golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f
 golang.org/x/crypto/openpgp
 golang.org/x/crypto/bcrypt
-golang.org/x/crypto/ssh/terminal
 golang.org/x/crypto/ssh
 golang.org/x/crypto/openpgp/armor
 golang.org/x/crypto/openpgp/errors
@@ -318,7 +317,6 @@ golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
 # golang.org/x/sys v0.0.0-20190523142557-0e01d883c5c5
 golang.org/x/sys/unix
-golang.org/x/sys/windows
 golang.org/x/sys/cpu
 # golang.org/x/text v0.3.2
 golang.org/x/text/unicode/norm

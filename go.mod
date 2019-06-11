@@ -1,14 +1,13 @@
 module github.com/terraform-providers/terraform-provider-vsphere
 
 replace (
-	github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.3.0
 	github.com/golang/lint => golang.org/x/lint v0.0.0-20190409202823-959b441ac422
+	github.com/vmware/vic => github.com/d-luu/vic v1.5.3-patch
 	sourcegraph.com/sourcegraph/go-diff => github.com/sourcegraph/go-diff v0.5.1
 )
 
 require (
 	cloud.google.com/go v0.39.0 // indirect
-	github.com/Sirupsen/logrus v1.4.2 // indirect
 	github.com/aws/aws-sdk-go v1.19.37 // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dustinkirkland/golang-petname v0.0.0-20170921220637-d3c2ba80e75e // indirect
@@ -38,7 +37,8 @@ require (
 	github.com/ulikunitz/xz v0.5.6 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/vmware/govmomi v0.20.1
-	github.com/vmware/vic v1.5.2
+	github.com/vmware/vic v0.0.0-00010101000000-000000000000
+
 	golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f // indirect
 	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
 	golang.org/x/oauth2 v0.0.0-20190523182746-aaccbc9213b0 // indirect
