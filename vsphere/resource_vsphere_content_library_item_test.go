@@ -8,10 +8,9 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/testhelper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccResourceVSphereContentLibraryItem_localOva(t *testing.T) {
@@ -141,7 +140,10 @@ func testAccResourceVSphereContentLibraryItemGetOva() {
 }
 
 func testAccResourceVSphereContentLibraryItemGetFile(url, file string) {
-	resp, _ := http.Get(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
 	defer resp.Body.Close()
 
 	out, _ := os.Create(file)

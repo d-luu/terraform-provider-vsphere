@@ -1,12 +1,13 @@
 package vsphere
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // defaultAPITimeout is a default timeout value that is passed to functions
@@ -14,8 +15,8 @@ import (
 const defaultAPITimeout = time.Minute * 5
 
 // Provider returns a terraform.ResourceProvider.
-func Provider() terraform.ResourceProvider {
-	return &schema.Provider{
+func Provider() *schema.Provider {
+	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"user": {
 				Type:        schema.TypeString,
@@ -159,15 +160,27 @@ func Provider() terraform.ResourceProvider {
 			"vsphere_vmfs_disks":                 dataSourceVSphereVmfsDisks(),
 			"vsphere_role":                       dataSourceVsphereRole(),
 		},
-
-		ConfigureFunc: providerConfigure,
 	}
+	provider.ConfigureContextFunc = providerConfigure(provider)
+	return provider
 }
 
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	c, err := NewConfig(d)
-	if err != nil {
-		return nil, err
+func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
+	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+		terraformVersion := p.TerraformVersion
+		if terraformVersion == "" {
+			// Terraform 0.12 introduced this field to the protocol
+			// We can therefore assume that if it's missing it's 0.10 or 0.11
+			terraformVersion = "0.11+compatible"
+		}
+		c, err := NewConfig(d, terraformVersion)
+		if err != nil {
+			return nil, diag.FromErr(err)
+		}
+		client, err := c.Client()
+		if err != nil {
+			return nil, diag.FromErr(err)
+		}
+		return client, nil
 	}
-	return c.Client()
 }

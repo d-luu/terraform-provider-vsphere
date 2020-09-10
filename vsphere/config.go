@@ -12,14 +12,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/vmware/govmomi/vapi/rest"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/viapi"
 	"github.com/vmware/govmomi"
 	"github.com/vmware/govmomi/pbm"
 	"github.com/vmware/govmomi/session"
 	"github.com/vmware/govmomi/session/cache"
+	"github.com/vmware/govmomi/vapi/rest"
 	"github.com/vmware/govmomi/vapi/tags"
 	"github.com/vmware/govmomi/vim25"
 	"github.com/vmware/govmomi/vim25/debug"
@@ -76,6 +75,8 @@ func (c *VSphereClient) TagsManager() (*tags.Manager, error) {
 // Config holds the provider configuration, and delivers a populated
 // VSphereClient based off the contained settings.
 type Config struct {
+	terraformVersion string
+
 	InsecureFlag    bool
 	Debug           bool
 	Persist         bool
@@ -90,7 +91,7 @@ type Config struct {
 }
 
 // NewConfig returns a new Config from a supplied ResourceData.
-func NewConfig(d *schema.ResourceData) (*Config, error) {
+func NewConfig(d *schema.ResourceData, terraformVersion string) (*Config, error) {
 	// Handle backcompat support for vcenter_server; once that is removed,
 	// vsphere_server can just become a Required field that is referenced inline
 	// in Config below.
@@ -105,6 +106,8 @@ func NewConfig(d *schema.ResourceData) (*Config, error) {
 	}
 
 	c := &Config{
+		terraformVersion: terraformVersion,
+
 		User:            d.Get("user").(string),
 		Password:        d.Get("password").(string),
 		InsecureFlag:    d.Get("allow_unverified_ssl").(bool),

@@ -3,14 +3,15 @@ package vsphere
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
+	"strconv"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/administrationroles"
 	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/utils"
 	"github.com/vmware/govmomi/object"
 	"github.com/vmware/govmomi/vim25/types"
-	"log"
-	"strconv"
-	"strings"
 )
 
 func resourceVsphereEntityPermissions() *schema.Resource {
@@ -206,7 +207,7 @@ func resourceEntityPermissionsDelete(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
-func resourceVSphereEntityPermissionsCustomizeDiff(d *schema.ResourceDiff, meta interface{}) error {
+func resourceVSphereEntityPermissionsCustomizeDiff(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
 	if d.HasChange("entity_id") {
 		oldEntityId, newEntityId := d.GetChange("entity_id")
 		if oldEntityId.(string) != "" {

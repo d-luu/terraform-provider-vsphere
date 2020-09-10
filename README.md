@@ -25,8 +25,7 @@ website][tf-website] and the [GitHub project page][tf-github].
 This provider plugin is maintained by the Terraform team at [HashiCorp](https://www.hashicorp.com/).
 
 ## Requirements
--	[Terraform](https://www.terraform.io/downloads.html) 0.12.x
-    - Note that version 0.11.x currently works, but is [deprecated](https://www.hashicorp.com/blog/deprecating-terraform-0-11-support-in-terraform-providers/)
+-	[Terraform](https://www.terraform.io/downloads.html) 0.12.x+
 - vSphere 6.5    
    -  Currently, this provider is not tested for vSphere 7, but plans are underway to add support.
 -	[Go](https://golang.org/doc/install) 1.14.x (to build the provider plugin)

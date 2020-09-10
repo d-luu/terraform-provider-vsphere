@@ -1,7 +1,6 @@
 package vsphere
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"io/ioutil"
 	"log"
 	"os"
@@ -9,7 +8,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func init() {
@@ -191,6 +191,8 @@ func TestAccClient_noPersistence(t *testing.T) {
 
 func TestNewConfig(t *testing.T) {
 	expected := &Config{
+		terraformVersion: "0.13.2",
+
 		User:           "foo",
 		Password:       "bar",
 		InsecureFlag:   true,
@@ -202,7 +204,7 @@ func TestNewConfig(t *testing.T) {
 		VimSessionPath: "./baz",
 	}
 
-	r := &schema.Resource{Schema: Provider().(*schema.Provider).Schema}
+	r := &schema.Resource{Schema: Provider().Schema}
 	d := r.Data(nil)
 	d.Set("user", expected.User)
 	d.Set("password", expected.Password)
@@ -214,7 +216,7 @@ func TestNewConfig(t *testing.T) {
 	d.Set("persist_session", expected.Persist)
 	d.Set("vim_session_path", expected.VimSessionPath)
 
-	actual, err := NewConfig(d)
+	actual, err := NewConfig(d, "0.13.2")
 	if err != nil {
 		t.Fatalf("error creating new configuration: %s", err)
 	}
