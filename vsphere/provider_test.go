@@ -1,44 +1,42 @@
 package vsphere
 
 import (
+	"context"
+	"fmt"
 	"os"
+	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/terraform-providers/terraform-provider-null/null"
 	"github.com/terraform-providers/terraform-provider-random/random"
-	"github.com/terraform-providers/terraform-provider-template/template"
 )
 
-var testAccProviders map[string]terraform.ResourceProvider
+var testAccProviders map[string]*schema.Provider
 var testAccProvider *schema.Provider
 var testAccNullProvider *schema.Provider
 var testAccRandomProvider *schema.Provider
-var testAccTemplateProvider *schema.Provider
 
 func init() {
-	testAccProvider = Provider().(*schema.Provider)
-	testAccNullProvider = null.Provider().(*schema.Provider)
-	testAccRandomProvider = random.Provider().(*schema.Provider)
-	testAccTemplateProvider = template.Provider().(*schema.Provider)
-	testAccProviders = map[string]terraform.ResourceProvider{
-		"vsphere":  testAccProvider,
-		"null":     testAccNullProvider,
-		"random":   testAccRandomProvider,
-		"template": testAccTemplateProvider,
+	testAccProvider = Provider()
+	testAccNullProvider = null.Provider()
+	testAccRandomProvider = random.Provider()
+	testAccProviders = map[string]*schema.Provider{
+		"vsphere": testAccProvider,
+		"null":    testAccNullProvider,
+		"random":  testAccRandomProvider,
 	}
 }
 
 func TestProvider(t *testing.T) {
-	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
+	if err := Provider().InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 
 }
 
 func TestProvider_impl(t *testing.T) {
-	var _ terraform.ResourceProvider = Provider()
+	var _ *schema.Provider = Provider()
 }
 
 func testAccPreCheck(t *testing.T) {
@@ -74,5 +72,16 @@ func testAccCheckEnvVariables(t *testing.T, variableNames []string) {
 func testAccProviderMeta(t *testing.T) (interface{}, error) {
 	t.Helper()
 	d := schema.TestResourceDataRaw(t, testAccProvider.Schema, make(map[string]interface{}))
-	return providerConfigure(d)
+	p := &schema.Provider{
+		Schema: testAccProvider.Schema,
+	}
+	pc := providerConfigure(p)
+	client, diagErrs := pc(context.TODO(), d)
+	var b strings.Builder
+	if diagErrs.HasError() {
+		for _, d := range diagErrs {
+			b.WriteString(d.Summary + "\n")
+		}
+	}
+	return client, fmt.Errorf(b.String())
 }

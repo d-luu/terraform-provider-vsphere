@@ -17,14 +17,14 @@ This provider plugin is maintained by the Terraform team at [HashiCorp](https://
 
 # Using the Provider
 
-The current version of this provider requires Terraform v0.10.2 or higher to
+The current version of this provider requires Terraform v0.12.0 or higher to
 run.
 
 Note that you need to run `terraform init` to fetch the provider before
-deploying. Read about the provider split and other changes to TF v0.10.0 in the
-official release announcement found [here][tf-0.10-announce].
+deploying. Read about the provider split and other changes to TF v0.12.0 in the
+official release announcement found [here][tf-0.12-announce].
 
-[tf-0.10-announce]: https://www.hashicorp.com/blog/hashicorp-terraform-0-10/
+[tf-0.12-announce]: https://www.hashicorp.com/blog/announcing-terraform-0-12
 
 ## Full Provider Documentation
 

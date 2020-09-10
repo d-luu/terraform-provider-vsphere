@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func testAccClientPreCheck(t *testing.T) {
@@ -161,6 +161,8 @@ func TestAccClient_noPersistence(t *testing.T) {
 
 func TestNewConfig(t *testing.T) {
 	expected := &Config{
+		terraformVersion: "0.13.2",
+
 		User:            "foo",
 		Password:        "bar",
 		InsecureFlag:    true,
@@ -173,7 +175,7 @@ func TestNewConfig(t *testing.T) {
 		RestSessionPath: "./qux",
 	}
 
-	r := &schema.Resource{Schema: Provider().(*schema.Provider).Schema}
+	r := &schema.Resource{Schema: Provider().Schema}
 	d := r.Data(nil)
 	d.Set("user", expected.User)
 	d.Set("password", expected.Password)
@@ -186,7 +188,7 @@ func TestNewConfig(t *testing.T) {
 	d.Set("vim_session_path", expected.VimSessionPath)
 	d.Set("rest_session_path", expected.RestSessionPath)
 
-	actual, err := NewConfig(d)
+	actual, err := NewConfig(d, "0.13.2")
 	if err != nil {
 		t.Fatalf("error creating new configuration: %s", err)
 	}
