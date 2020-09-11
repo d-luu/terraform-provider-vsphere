@@ -526,11 +526,17 @@ func resourceVSphereVirtualMachineRead(d *schema.ResourceData, meta interface{})
 	}
 
 	// Read the VM Home storage policy if associated.
-	polID, err := spbm.PolicyIDByVirtualMachine(client, moid)
-	if err != nil {
-		return err
+	// An environment variable called VSPHERE_SKIP_QUERY_STORAGE_POLICY can be used to toggle whether to query
+	if strings.ToLower(os.Getenv("VSPHERE_SKIP_QUERY_STORAGE_POLICY")) != "true" {
+		polID, err := spbm.PolicyIDByVirtualMachine(client, moid)
+		if err != nil {
+			return err
+		}
+		d.Set("storage_policy_id", polID)
+	} else {
+		log.Printf("[DEBUG] environment variable VSPHERE_SKIP_QUERY_STORAGE_POLICY set to true, " +
+			"skipping query for storage policy id by virtual machine")
 	}
-	d.Set("storage_policy_id", polID)
 
 	// Read the PCI passthrough devices.
 	var pciDevs []string

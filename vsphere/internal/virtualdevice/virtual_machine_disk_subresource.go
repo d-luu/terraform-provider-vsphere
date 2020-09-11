@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
 	"path"
 	"reflect"
 	"sort"
@@ -1328,15 +1329,21 @@ func (r *DiskSubresource) Read(l object.VirtualDeviceList) error {
 	// Set storage policy if the VM exists.
 	vmUUID := r.rdd.Id()
 	if vmUUID != "" {
-		result, err := virtualmachine.MOIDForUUID(r.client, vmUUID)
-		if err != nil {
-			return err
+		// An environment variable called VSPHERE_SKIP_QUERY_STORAGE_POLICY can be used to toggle whether to query
+		if strings.ToLower(os.Getenv("VSPHERE_SKIP_QUERY_STORAGE_POLICY")) != "true" {
+			result, err := virtualmachine.MOIDForUUID(r.client, vmUUID)
+			if err != nil {
+				return err
+			}
+			polID, err := spbm.PolicyIDByVirtualDisk(r.client, result.MOID, r.Get("key").(int))
+			if err != nil {
+				return err
+			}
+			r.Set("storage_policy_id", polID)
+		} else {
+			log.Printf("[DEBUG] environment variable VSPHERE_SKIP_QUERY_STORAGE_POLICY set to true, " +
+				"skipping query for storage policy id by virtual disk")
 		}
-		polID, err := spbm.PolicyIDByVirtualDisk(r.client, result.MOID, r.Get("key").(int))
-		if err != nil {
-			return err
-		}
-		r.Set("storage_policy_id", polID)
 	}
 
 	log.Printf("[DEBUG] %s: Read finished (key and device address may have changed)", r)
