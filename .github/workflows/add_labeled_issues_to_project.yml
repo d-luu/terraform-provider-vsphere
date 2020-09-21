@@ -4,6 +4,7 @@ on:
     types: [labeled]
 jobs:
   Move_Blocked_Issue_On_Working_Board:
+    if: github.repository=='hashicorp/terraform-provider-vsphere' || github.repository=='terraform-providers/terraform-provider-vsphere'
     runs-on: ubuntu-latest
     steps:
     - uses: aareet/move-labeled-or-milestoned-issue@v2.0
@@ -13,6 +14,7 @@ jobs:
         column-name: "Blocked"
         label-name: "waiting-response"
   Move_Crash_Issue_On_Working_Board:
+    if: github.repository=='hashicorp/terraform-provider-vsphere' || github.repository=='terraform-providers/terraform-provider-vsphere'
     runs-on: ubuntu-latest
     steps:
     - uses: aareet/move-labeled-or-milestoned-issue@v2.0

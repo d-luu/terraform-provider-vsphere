@@ -5,6 +5,7 @@ on:
 
 jobs:
   stale:
+    if: github.repository=='hashicorp/terraform-provider-vsphere' || github.repository=='terraform-providers/terraform-provider-vsphere'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/stale@v1.1.0
